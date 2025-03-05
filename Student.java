@@ -12,6 +12,10 @@ public class Student extends Person {
         return studentId;
     }
 
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -39,7 +43,7 @@ public class Student extends Person {
 
     @Override
     public void displayInfo() {
-        System.out.println("Mã SV: " + studentId + ", Tên: " + name + ", Ngày sinh: " + birthDate +
-                ", Giới tính: " + gender + ", SĐT: " + phoneNumber + ", Lớp: " + classId);
+        System.out.printf("| %-5d | %-20s | %-10s | %-5s | %-12s | %-10s |\n",
+                studentId, name, birthDate, gender, phoneNumber, classId);
     }
 }

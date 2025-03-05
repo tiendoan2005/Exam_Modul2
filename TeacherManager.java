@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class TeacherManager {
-    private static final String TEACHER_FILE = "data/teachers.csv";
+    private static final String TEACHER_FILE = "data/teacher.csv";
     private List<Teacher> teachers = new ArrayList<>();
 
     public TeacherManager() {
@@ -22,14 +22,14 @@ public class TeacherManager {
                 if (data.length == 5) {
                     teachers.add(new Teacher(data[0].trim(), data[1].trim(), data[2].trim(), data[3].trim(), data[4].trim()));
                 } else {
-                    System.out.println("Lỗi dữ liệu giáo viên: " + line);
+                    System.out.println("Lỗi dữ liệu giáo viên, bỏ qua dòng: " + line);
                 }
             }
         } catch (IOException e) {
             System.out.println("Lỗi khi tải danh sách giáo viên: " + e.getMessage());
         }
     }
-    
+
     public void displayTeachersFromFile() {
         File file = new File(TEACHER_FILE);
         if (!file.exists()) {
@@ -39,13 +39,27 @@ public class TeacherManager {
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            System.out.println("\n--- DANH SÁCH GIÁO VIÊN ---");
+            List<String[]> teacherData = new ArrayList<>();
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                String[] data = line.split(",");
+                if (data.length == 5) {
+                    teacherData.add(data);
+                }
+            }
+
+            if (teacherData.isEmpty()) {
+                System.out.println("Không có giáo viên nào trong danh sách.");
+                return;
+            }
+
+            System.out.println("\n--- DANH SÁCH GIÁO VIÊN ---");
+            System.out.printf("%-10s %-20s %-12s %-10s %-15s\n", "Mã GV", "Tên", "Ngày sinh", "Giới tính", "SĐT");
+            System.out.println("--------------------------------------------------------------");
+            for (String[] data : teacherData) {
+                System.out.printf("%-10s %-20s %-12s %-10s %-15s\n", data[0], data[1], data[2], data[3], data[4]);
             }
         } catch (IOException e) {
             System.out.println("Lỗi khi đọc file: " + e.getMessage());
         }
     }
-
 }

@@ -37,12 +37,22 @@ public class Main {
                     break;
 
                 case 2:
-                    System.out.print("Nhập mã sinh viên cần xóa: ");
-                    int deleteId = sc.nextInt();
-                    sc.nextLine();
-                    studentManager.deleteStudent(deleteId);
+                    while (true) {
+                        try {
+                            System.out.print("Nhập mã sinh viên cần xóa (Nhấn Enter để quay lại menu): ");
+                            String input = sc.nextLine().trim();
+                            if (input.isEmpty())
+                                break;
+                            int deleteId = Integer.parseInt(input);
+                            studentManager.deleteStudent(sc, deleteId);
+                            break;
+                        } catch (NotFoundStudentException e) {
+                            System.out.println(e.getMessage());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Mã sinh viên phải là số nguyên hợp lệ.");
+                        }
+                    }
                     break;
-
                 case 3:
                     System.out.print("Nhập mã sinh viên cần sửa: ");
                     int editId = sc.nextInt();

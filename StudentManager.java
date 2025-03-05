@@ -60,7 +60,6 @@ public class StudentManager {
         } catch (IOException e) {
             System.out.println("Lỗi khi tải dữ liệu lớp học: " + e.getMessage());
         }
-        System.out.println("Mã lớp học không tồn tại.");
         return false;
     }
 
@@ -75,8 +74,8 @@ public class StudentManager {
             System.out.println("Định dạng ngày sinh không hợp lệ. Sử dụng dd/MM/yyyy.");
             return;
         }
-        if (!phoneNumber.matches("0\\d{9,10}")) {
-            System.out.println("Số điện thoại phải bắt đầu bằng số 0 và có từ 10 đến 11 chữ số.");
+        if (!phoneNumber.matches("^(090|091)\\d{7}$")) {
+            System.out.println("Số điện thoại phải bắt đầu bằng số 090 hoặc 091 và có 10 chữ số.");
             return;
         }
         if (!isPhoneUnique(phoneNumber)) {
@@ -95,24 +94,40 @@ public class StudentManager {
         System.out.println("Thêm sinh viên thành công!");
     }
 
-    public void deleteStudent(int id) {
-        Iterator<Student> iterator = students.iterator();
-        boolean found = false;
-        while (iterator.hasNext()) {
-            Student student = iterator.next();
+    public void deleteStudent(Scanner sc, int id) throws NotFoundStudentException {
+        Student studentToDelete = null;
+
+        for (Student student : students) {
             if (student.getStudentId() == id) {
-                iterator.remove();
-                found = true;
+                studentToDelete = student;
                 break;
             }
         }
-        if (found) {
+
+        if (studentToDelete == null) {
+            throw new NotFoundStudentException("Không tìm thấy sinh viên với ID: " + id);
+        }
+
+        System.out.print("Bạn có chắc chắn muốn xóa sinh viên này không? (Yes/No): ");
+        String confirmation = sc.nextLine().trim();
+
+        if (confirmation.equalsIgnoreCase("Yes")) {
+            students.remove(studentToDelete);
+
+            // Cập nhật lại mã sinh viên từ 1
+            for (int i = 0; i < students.size(); i++) {
+                students.get(i).setStudentId(i + 1);
+            }
+
             saveStudents();
-            System.out.println("Xóa sinh viên thành công.");
+            System.out.println("Xóa sinh viên thành công, cập nhật lại ID.");
+            displayAllStudents();
         } else {
-            System.out.println("Không tìm thấy sinh viên với mã " + id);
+            System.out.println("Hủy xóa sinh viên.");
         }
     }
+
+
 
     private void saveStudents() {
         File file = new File(STUDENT_FILE);
@@ -147,10 +162,18 @@ public class StudentManager {
     public void displayAllStudents() {
         if (students.isEmpty()) {
             System.out.println("Danh sách sinh viên trống.");
-        } else {
-            students.forEach(Student::displayInfo);
+            return;
         }
+
+        System.out.println("+-------+----------------------+------------+-------+--------------+----------+");
+        System.out.println("| Mã SV | Tên                 | Ngày sinh  | GT    | SĐT          | Lớp      |");
+        System.out.println("+-------+----------------------+------------+-------+--------------+----------+");
+
+        students.forEach(Student::displayInfo);
+
+        System.out.println("+-------+----------------------+------------+-------+--------------+----------+");
     }
+
     public void editStudent(int id, String name, String birthDate, String gender, String phoneNumber, String classId) {
         for (Student student : students) {
             if (student.getStudentId() == id) {
