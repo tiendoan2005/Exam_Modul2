@@ -14,7 +14,7 @@ public class Main {
             System.out.println("4. Hiển thị danh sách sinh viên");
             System.out.println("5. Xuất danh sách sinh viên ra CSV");
             System.out.println("6. Tìm kiếm sinh viên theo tên");
-            System.out.println("7. Hiển thị danh sách giáo viên");
+            System.out.println("7. Hiển thị thông tin giáo viên");
             System.out.println("0. Thoát");
             System.out.print("Chọn chức năng: ");
 
@@ -87,7 +87,9 @@ public class Main {
                     break;
 
                 case 7:
-                    teacherManager.displayTeachersFromFile();
+                    System.out.print("Nhập mã giáo viên: ");
+                    String teacherId = sc.nextLine();
+                    teacherManager.displayTeacherById(teacherId);
                     break;
                 case 0:
                     System.out.println("Thoát chương trình.");

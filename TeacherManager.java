@@ -26,40 +26,23 @@ public class TeacherManager {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Lỗi khi tải danh sách giáo viên: " + e.getMessage());
+            System.out.println("Lỗi khi đọc file giáo viên: " + e.getMessage());
         }
     }
 
-    public void displayTeachersFromFile() {
-        File file = new File(TEACHER_FILE);
-        if (!file.exists()) {
-            System.out.println("File danh sách giáo viên không tồn tại.");
-            return;
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            List<String[]> teacherData = new ArrayList<>();
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 5) {
-                    teacherData.add(data);
-                }
-            }
-
-            if (teacherData.isEmpty()) {
-                System.out.println("Không có giáo viên nào trong danh sách.");
+    public void displayTeacherById(String teacherId) {
+        System.out.println("\nĐang tìm kiếm giáo viên...");
+        for (Teacher teacher : teachers) {
+            if (teacher.getTeacherId().equalsIgnoreCase(teacherId)) {
+                System.out.println("\n================================================================================");
+                System.out.printf("| %-10s | %-20s | %-10s | %-10s | %-15s |\n", "Mã GV", "Tên", "Ngày sinh", "Giới tính", "Số điện thoại");
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.printf("| %-10s | %-20s | %-10s | %-10s | %-15s |\n",
+                        teacher.getTeacherId(), teacher.getName(), teacher.getBirthDate(), teacher.getGender(), teacher.getPhoneNumber());
+                System.out.println("================================================================================\n");
                 return;
             }
-
-            System.out.println("\n--- DANH SÁCH GIÁO VIÊN ---");
-            System.out.printf("%-10s %-20s %-12s %-10s %-15s\n", "Mã GV", "Tên", "Ngày sinh", "Giới tính", "SĐT");
-            System.out.println("--------------------------------------------------------------");
-            for (String[] data : teacherData) {
-                System.out.printf("%-10s %-20s %-12s %-10s %-15s\n", data[0], data[1], data[2], data[3], data[4]);
-            }
-        } catch (IOException e) {
-            System.out.println("Lỗi khi đọc file: " + e.getMessage());
         }
+        System.out.println("Không tìm thấy giáo viên với mã: " + teacherId + "\n");
     }
 }

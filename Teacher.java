@@ -9,6 +9,19 @@ public class Teacher extends Person {
     public String getTeacherId() {
         return teacherId;
     }
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    @Override
+    public String getBirthDate() {
+        return super.getBirthDate();
+    }
+
+    @Override
+    public String getPhoneNumber() {
+        return super.getPhoneNumber();
+    }
 
     @Override
     public void displayInfo() {
